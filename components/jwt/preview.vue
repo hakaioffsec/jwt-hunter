@@ -2,7 +2,7 @@
 	<div class="flex flex-row space-x-8 mt-14 w-full justify-center">
 		<div class="col-span-1 md:col-span-1 flex flex-col">
 			<label for="encoded-token" class="block text-left text-white font-normal pb-4 text-2xl">Encoded</label>
-			<textarea v-model="form.token" id="jwt-token" variant="none" :cols=50 spellcheck="false" class="text-md h-full p-4 border border-secondary-300 bg-secondary focus:outline-none focus:border-secondary-300 rounded-md resize-none" />
+			<textarea v-model="form.token" id="jwt-token" variant="none" :cols=50 spellcheck="false" class="text-white text-md h-full p-4 border border-secondary-300 bg-secondary focus:outline-none focus:border-secondary-300 rounded-md resize-none" />
 		</div>
 		<div class="flex flex-col flex-1">
 			<label for="header" class="block text-left text-white font-normal pb-4 text-2xl">Decoded</label>
@@ -88,16 +88,5 @@ watch(jwtParts, () => {
 
 		form.token = parts.join('.');
 	}
-
-	// try {
-	// 	if (parts) {
-	// 		parts[0] = encodeJwtPart(JSON.parse(jwtParts.header));
-	// 		parts[1] = encodeJwtPart(JSON.parse(jwtParts.payload));
-
-	// 		form.token = parts.join('.');
-	// 	}
-	// } catch (e) {
-	// 	addErrors(['jwt-token']);
-	// }
 });
 </script>
