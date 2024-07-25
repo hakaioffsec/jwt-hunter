@@ -13,8 +13,10 @@
 import jwkToPem from 'jwk-to-pem';
 import { EAlgorithms } from '~/commons/enums/algorithms-enum';
 import type { IAttack } from '~/commons/interfaces/attack-interface';
+import { useTokenStore } from '~/stores/useTokenStore';
 
 const form = useJwtForm().value;
+const token = useTokenStore();
 
 const attackOptions = reactive({
     algorithms: [EAlgorithms.RS256, EAlgorithms.RS384, EAlgorithms.RS512],
@@ -26,7 +28,7 @@ const attackOptions = reactive({
 
 const publicKey = ref('');
 
-watch([form, publicKey, attackOptions], () => {
+watch([token, publicKey, attackOptions], () => {
     removeClasses('jwt-public-key', ['focus:border-error', 'border-error']);
     addClasses('jwt-public-key', ['focus:border-secondary-300', 'border-secondary-300']);
 
@@ -44,9 +46,8 @@ watch([form, publicKey, attackOptions], () => {
     }
 
     try {
-        const payload = algorithmConfusion(form.token, attackOptions.options.publicKey, EAlgorithms.HS256);
+        const payload = algorithmConfusion(token.value, attackOptions.options.publicKey, EAlgorithms.HS256);
         form.payload = payload
-        form.token = payload
     } catch (e) {
         addErrors(['jwt-token']);
         console.error(e);

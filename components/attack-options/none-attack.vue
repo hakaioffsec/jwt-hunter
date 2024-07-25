@@ -9,8 +9,10 @@
 import { EAlgorithms } from '~/commons/enums/algorithms-enum';
 import { NoneAttackEnum } from '~/commons/enums/none-attack-enum';
 import type { IAttack } from '~/commons/interfaces/attack-interface';
+import { useTokenStore } from '~/stores/useTokenStore';
 
 const form = useJwtForm().value;
+const token = useTokenStore();
 
 const attackOptions = reactive({
     algorithms: Object.values(EAlgorithms),
@@ -22,9 +24,8 @@ const attackOptions = reactive({
 watch([form, attackOptions], () => {
     removeErrors(['jwt-token']);
     try {
-        const payload = noneAttack(form.token, attackOptions.options.algorithm);
+        const payload = noneAttack(token.value, attackOptions.options.algorithm);
         form.payload = payload;
-        form.token = payload;
     } catch (e) {
         addErrors(['jwt-token']);
     }

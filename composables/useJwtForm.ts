@@ -1,7 +1,9 @@
+import { EAttacks } from "~/commons/enums/attacks-enum";
+
 export const useJwtForm = () => {
     return useState('jwtForm', () => reactive({
-        token: '',
-        attack: '',
-        payload: ''
+        token: getInitialJwt(),
+        attack: EAttacks.CUSTOM,
+        payload: getInitialJwt()
     }));
 }

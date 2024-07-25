@@ -23,35 +23,31 @@
 </template>
 
 <script setup lang="ts">
+import { EAttacks } from '~/commons/enums/attacks-enum';
 import { TokenException } from '~/commons/exceptions/token-exception';
+import { useTokenStore } from '~/stores/useTokenStore';
 
 const form = useJwtForm().value;
+const token = useTokenStore();
 
 const jwtParts = reactive({
 	header: '',
 	payload: ''
 })
 
-form.token = getInitialJwt();
-
 let tokenParts = getJwtParts(form.token);
 jwtParts.header = JSON.stringify(tokenParts[0], null, 2);
 jwtParts.payload = JSON.stringify(tokenParts[1], null, 2);
 
-watch(form, () => {
+watch(() => form.token, () => {
 	removeClasses('jwt-token', ['outline', 'outline-1', 'outline-error']);
 	addClasses('jwt-token', ['focus:outline-none']);
 
 	try {
 		const parts = getJwtParts(form.token);
 
-		let jwtHeaderFocused = document.activeElement?.id == 'jwt-token-header';
-		let jwtPayloadFocused = document.activeElement?.id == 'jwt-token-payload';
-
-		if (parts && !jwtHeaderFocused && !jwtPayloadFocused) {
-			jwtParts.header = JSON.stringify(parts[0], null, 2);
-			jwtParts.payload = JSON.stringify(parts[1], null, 2);
-		}
+		jwtParts.header = JSON.stringify(parts[0], null, 2)
+		jwtParts.payload = JSON.stringify(parts[1], null, 2);
 	} catch (error) {
 		if(error instanceof TokenException) {
 			removeClasses('jwt-token', ['focus:outline-none']);
@@ -67,10 +63,10 @@ watch(jwtParts, () => {
 
 	removeClasses('jwt-token-header', ['border-error', 'focus:border-error']);
 	addClasses('jwt-token-header', ['border-secondary', 'focus:border-secondary']);
-	
+
 	removeClasses('jwt-token-payload', ['border-error', 'focus:border-error']);
 	addClasses('jwt-token-payload', ['border-secondary', 'focus:border-secondary']);
-	
+
 	if(parts) {
 		try {
 			parts[0] = encodeJwtPart(JSON.parse(jwtParts.header));
@@ -86,7 +82,11 @@ watch(jwtParts, () => {
 			addClasses('jwt-token-payload', ['border-error', 'focus:border-error']);
 		}
 
-		form.token = parts.join('.');
+		token.value = parts.join('.');
+		
+		if(form.attack == EAttacks.CUSTOM) {
+			form.payload = token.value
+		}
 	}
 });
 </script>

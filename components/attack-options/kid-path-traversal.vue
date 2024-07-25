@@ -9,6 +9,7 @@
 import { EAlgorithms } from '~/commons/enums/algorithms-enum';
 import { EKidPayload } from '~/commons/enums/kid-payloads-enum';
 import type { IAttack } from '~/commons/interfaces/attack-interface';
+import { useTokenStore } from '~/stores/useTokenStore';
 
 const attackOptions = reactive({
     options: {},
@@ -16,14 +17,14 @@ const attackOptions = reactive({
 } as IAttack);
 
 const form = useJwtForm().value
+const token = useTokenStore()
 
-watch([form, attackOptions], () => {
+watch([token, attackOptions], () => {
     removeErrors(['jwt-token']);
 
     try {
-        const payload = kidPathTraversal(form.token, attackOptions.options.payload);
+        const payload = kidPathTraversal(token.value, attackOptions.options.payload);
         form.payload = payload
-        form.token = payload
     } catch (e) {
         addErrors(['jwt-token']);
     }
