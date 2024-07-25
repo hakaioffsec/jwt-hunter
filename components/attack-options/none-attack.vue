@@ -21,7 +21,7 @@ const attackOptions = reactive({
     }
 } as IAttack);
 
-watch([form, attackOptions], () => {
+watch([token, attackOptions], () => {
     removeErrors(['jwt-token']);
     try {
         const payload = noneAttack(token.value, attackOptions.options.algorithm);
