@@ -39,8 +39,8 @@ export async function kidPathTraversal(token: string, signaturePayload: EKidPayl
     header.kid = signaturePayload;
 
     const signatures = {
-        [EKidPayload.TIMER_MIGRATION]: 1,
-        [EKidPayload.RANDOMIZE_VA_SPACE]: 2
+        [EKidPayload.TIMER_MIGRATION]: "1\n",
+        [EKidPayload.RANDOMIZE_VA_SPACE]: "2\n"
     }
 
     return await jwtSign({
