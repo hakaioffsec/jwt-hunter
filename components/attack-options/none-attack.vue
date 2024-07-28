@@ -13,6 +13,7 @@ import { useTokenStore } from '~/stores/useTokenStore';
 
 const token = useTokenStore();
 const jwtParts = useJwtParts().value;
+const form = useJwtForm().value;
 
 const attackOptions = reactive({
     algorithms: Object.values(EAlgorithms),
@@ -33,4 +34,8 @@ watch(attackOptions, async () => {
         addErrors(['jwt-token']);
     }
 });
+
+watch(token, async () => {
+    form.payload = token.value;
+})
 </script>

