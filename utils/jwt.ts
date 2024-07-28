@@ -1,4 +1,6 @@
 import { Buffer } from "buffer";
+import { importPKCS8, SignJWT } from "jose";
+import type { JwtSignOptions } from "~/commons/interfaces/jwt-sign-options";
 import { TokenException } from "~/commons/exceptions/token-exception";
 
 export function getJwtParts(token: string, signature: boolean = false): any {
@@ -24,4 +26,28 @@ export function getJwtParts(token: string, signature: boolean = false): any {
 
 export function encodeJwtPart(part: {}) {
     return btoa(JSON.stringify(part)).replace(/={1,2}$/, '')
+}
+
+export async function jwtSign(jwtSignOptions: JwtSignOptions) {
+    let secret, alg;
+
+    if(!jwtSignOptions.alg) {
+        alg = jwtSignOptions.header['alg']
+    } else {
+        alg = jwtSignOptions.alg
+    }
+
+    if(alg.startsWith('HS')) {
+        secret = new TextEncoder().encode(jwtSignOptions.secretKey)
+    } else {
+        secret = await importPKCS8(jwtSignOptions.secretKey, alg);
+    }
+
+    return await new SignJWT(jwtSignOptions.payload)
+        .setProtectedHeader({
+            alg: jwtSignOptions.alg,
+            typ: 'JWT',
+            ...jwtSignOptions.header
+        })
+        .sign(secret);
 }

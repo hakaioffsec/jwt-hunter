@@ -1,6 +1,6 @@
 <template>
     <div class="flex justify-center">
-        <USelectMenu v-model="attackOptions.options.payload" :options="Object.values(EKidPayload)" size="lg" color="gray" class="w-1/3" placeholder="Select attack"/>
+        <USelectMenu v-model="attackOptions.options.payload" :options="Object.values(EKidPayload)" size="lg" color="gray" class="w-1/3" placeholder="Select file path"/>
     </div>
 </template>
 
@@ -16,16 +16,20 @@ const attackOptions = reactive({
     algorithms: Object.values(EAlgorithms),
 } as IAttack);
 
-const form = useJwtForm().value
-const token = useTokenStore()
+const token = useTokenStore();
+const jwtParts = useJwtParts().value;
 
-watch([token, attackOptions], () => {
+watch(attackOptions, async () => {
     removeErrors(['jwt-token']);
 
     try {
-        const payload = kidPathTraversal(token.value, attackOptions.options.payload);
-        form.payload = payload
+        const payload = await kidPathTraversal(token.value, attackOptions.options.payload);
+        token.value = payload;
+
+        jwtParts.header = JSON.stringify(getJwtParts(token.value)[0], null, 2);
+
     } catch (e) {
+        console.error(e)
         addErrors(['jwt-token']);
     }
 })

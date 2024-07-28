@@ -20,4 +20,13 @@
     </div>
 </template>
 
-<style></style>
+<script setup lang="ts">
+
+const form = useJwtForm().value;
+const token = useTokenStore();
+
+form.token = await getInitialJwt();
+form.payload = await getInitialJwt();
+token.value = await getInitialJwt();
+
+</script>

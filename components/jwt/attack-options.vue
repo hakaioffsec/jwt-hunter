@@ -1,5 +1,8 @@
 <template>
 	<div>
+		<div v-if="form.attack == EAttacks.CUSTOM">
+			<AttackOptionsCustom />
+		</div>
 		<div v-if="form.attack == EAttacks.NONE_ATTACK">
 			<AttackOptionsNoneAttack />
 		</div>
@@ -7,7 +10,7 @@
 			<AttackOptionsAlgorithmConfusion />
 		</div>
 		<div v-if="form.attack == EAttacks.KID_PATH_TRAVERSAL">
-			<AttackOptionsKidPathTraversal/>
+			<AttackOptionsKidPathTraversal />
 		</div>
 	</div>
 </template>

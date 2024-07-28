@@ -1,5 +1,5 @@
 <template>
-    <label for="payload" class="block text-left text-white font-normal text-2xl mb-4">PAYLOAD</label>
+    <label for="payload" class="block text-left text-white font-normal text-2xl mb-4">Payload</label>
     <div class="w-full relative border border-secondary-300 bg-secondary rounded-md">
         <ClipboardButton :text-to-copy="form.payload" />
         <div class="px-6 py-6">

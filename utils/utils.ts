@@ -1,5 +1,4 @@
-import hmacSha256 from 'crypto-js/hmac-sha256'
-import Base64Url from 'crypto-js/enc-base64url'
+import { EAlgorithms } from '~/commons/enums/algorithms-enum';
 
 export function removeErrors(id_collection: string[]) {
     for(var id in id_collection) {
@@ -33,7 +32,7 @@ export function addClasses(div_id: string, class_list: string[]) {
     }
 }
 
-export function getInitialJwt() {
+export async function getInitialJwt() {
     const header = {
         typ: 'JWT',
         alg: 'HS256'
@@ -45,13 +44,12 @@ export function getInitialJwt() {
         groups: ['user','admin']
     };
 
-    const secret = 'secret';
+    const secretKey = 'secret-to-sign-token';
 
-    const jwt = [];
-
-    jwt[0] = encodeJwtPart(header)
-    jwt[1] = encodeJwtPart(payload)
-    jwt[2] = Base64Url.stringify(hmacSha256(`${header}.${payload}`, secret));
-
-    return jwt.join('.');
+    return await jwtSign({
+        header,
+        payload,
+        alg: EAlgorithms.HS256,
+        secretKey
+    });
 }
