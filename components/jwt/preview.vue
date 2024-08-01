@@ -16,7 +16,7 @@
 				<div class="flex py-1.5 px-3">
 					<span class="text-white text-sm">PAYLOAD: <span class="text-gray-500">DATA</span></span>
 				</div>
-				<UTextarea id="jwt-token-payload" autoresize v-model="jwtParts.payload" variant="none" spellcheck="false" textareaClass="text-md text-jwt-payload p-4 rounded-t-none border border-secondary focus:border-secondary"/>
+				<UTextarea id="jwt-token-payload" autoresize v-model="jwtParts.payload" variant="none" spellcheck="false" :rows="8" textareaClass="text-md text-jwt-payload p-4 rounded-t-none border border-secondary focus:border-secondary"/>
 				<div v-if="form.attack == EAttacks.CUSTOM" class="flex py-1.5 px-3">
 					<span class="text-white text-sm">SECRET: <span class="text-gray-500">KEY TO SIGN TOKEN <span v-if="!JSON.parse(jwtParts.header)['alg'].startsWith('HS')">(RSA KEY)</span></span></span>
 				</div>

@@ -1,6 +1,11 @@
 <template>
     <div class="flex justify-center">
-        <USelectMenu v-model="attackOptions.options.algorithm" :options="Object.values(NoneAttackEnum)" size="lg" color="gray" class="w-1/3" placeholder="Select algorithm payload"/>
+        <USelectMenu v-slot="{ open }" v-model="attackOptions.options.algorithm" :options="Object.values(NoneAttackEnum)" size="lg" color="gray" class="w-1/3" placeholder="Select algorithm payload">
+            <UButton color="gray" class="flex-1 justify-between py-2.5">
+                {{ attackOptions.options.algorithm }}
+                <UIcon name="i-heroicons-chevron-right-20-solid" class="w-5 h-5 transition-transform text-gray-400 dark:text-gray-500" :class="[open && 'transform rotate-90']" />
+            </UButton>
+        </USelectMenu>
     </div>
 </template>
 
@@ -18,7 +23,7 @@ const form = useJwtForm().value;
 const attackOptions = reactive({
     algorithms: Object.values(EAlgorithms),
     options: {
-        algorithm: ''
+        algorithm: NoneAttackEnum.NONE
     }
 } as IAttack);
 

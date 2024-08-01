@@ -1,6 +1,11 @@
 <template>
     <div class="flex justify-center">
-        <USelectMenu v-model="attackOptions.options.algorithm" :options="Object.keys(EAlgorithms).filter((alg) => alg.startsWith('HS'))" size="lg" color="gray" class="w-1/3" placeholder="Select algorithm to confuse"/>
+        <USelectMenu v-slot="{ open }" v-model="attackOptions.options.algorithm" :options="Object.keys(EAlgorithms).filter((alg) => alg.startsWith('HS'))" size="lg" color="gray" class="w-1/3" placeholder="Select algorithm to confuse">
+            <UButton color="gray" class="flex-1 justify-between py-2.5">
+                {{ attackOptions.options.algorithm }}
+                <UIcon name="i-heroicons-chevron-right-20-solid" class="w-5 h-5 transition-transform text-gray-400 dark:text-gray-500" :class="[open && 'transform rotate-90']" />
+            </UButton>
+        </USelectMenu>
     </div>
     <div class="flex flex-col w-full text-left">
         <label for="header" class="block text-white font-normal pb-4 text-2xl">Public Key</label>
@@ -25,7 +30,8 @@ const attackOptions = reactive({
     algorithms: [EAlgorithms.RS256, EAlgorithms.RS384, EAlgorithms.RS512],
     options: {
         useJwk: false,
-        secretKey: ''
+        secretKey: '',
+        algorithm: EAlgorithms.HS256
     }
 } as IAttack);
 
