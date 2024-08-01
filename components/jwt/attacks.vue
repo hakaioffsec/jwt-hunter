@@ -1,6 +1,6 @@
 <template>
     <div class="flex w-1/6">
-        <USelectMenu v-model="form.attack" :options="Object.values(EAttacks)" size="lg" color="secondary" class="w-full"/>
+        <USelectMenu v-slot="{ open }" v-model="form.attack" :options="Object.values(EAttacks)" color="secondary" size="lg" class="w-full"/>
     </div>
 </template>
 

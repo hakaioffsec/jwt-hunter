@@ -19,7 +19,7 @@ watch(algorithm, async () => {
     try {
         const header = JSON.parse(jwtParts.header);
         header['alg'] = algorithm.value;
-        jwtParts.header = JSON.stringify(header, null, 2);
+        // jwtParts.header = JSON.stringify(header, null, 2);
     } catch(e) {
         console.error(e);
     }
